@@ -1,18 +1,20 @@
 (ns lambda-email-sender.core
   (:require [cljs-lambda.macros :refer-macros [deflambda]]
             [cljs.nodejs :as nodejs]
-            [cljs.core.async :as async]
-            cljsjs.aws-sdk-js)
+            [cljs.core.async :as async])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
-(def ses (.SES. js/AWS))
+(def AWS (nodejs/require "aws-sdk"))
 
-(def max-send-rate-chan (async/chan))
-(.getSendQuota ses (fn [error data]
-                     (if error
-                       (throw error)
-                       (async/put! max-send-rate-chan (aget data "MaxSendRate")))))
-(def max-send-rate true)
+(def ses (AWS.SES. #js {:region "us-west-2"}))
+
+(defn get-send-quota []
+  (let [result-chan (async/chan 1 (map js->clj))]
+    (.getSendQuota ses (fn [error data]
+                         (if error
+                           (throw error)
+                           (async/put! result-chan data))))
+    result-chan))
 
 (deflambda work-magic [{:keys [datomic]} context]
   (go true))

@@ -25,8 +25,7 @@
                 :invoke lambda-email-sender.core/lambda-email-sender}]}
 
   :dependencies
-  [[cljsjs/aws-sdk-js "2.2.41-0"]
-   [cljsjs/nodejs-externs "1.0.4-1"]
+  [[cljsjs/nodejs-externs "1.0.4-1"]
    [io.nervous/cljs-lambda "0.3.0"]
    [io.nervous/cljs-nodejs-externs "0.2.0"]
    [org.clojure/clojure "1.8.0"]
@@ -36,7 +35,8 @@
   :description "FIXME"
 
   :npm
-  {:dependencies [[source-map-support "0.4.0"]
+  {:dependencies [[aws-sdk "2.3.12"]
+                  [source-map-support "0.4.0"]
                   [ws "1.1.0"]]}
 
   :plugins
